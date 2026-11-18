@@ -20,7 +20,7 @@ public class Datadix2 {
     static String auxiliar2_horas[];
     static double auxiliar2_anticipos[];
 
-    static int capacidad = 10;
+    static int capacidad = 0; // Inicia en 0 para que no haya registros de prueba
     static int contador_de_registros = 0;
 
     public static void main(String a[]) {
@@ -32,10 +32,8 @@ public class Datadix2 {
         horas = new String[capacidad];
         anticipos = new double[capacidad];
 
-        datos_iniciales(clientes, tipos, fechas, horas, anticipos);
-
         System.out.println("=================================");
-        System.out.println("         DATADIX STUDIO          ");
+        System.out.println(" DATADIX STUDIO ");
         System.out.println("=================================");
 
         int respuesta_inicial = menu_inicial();
@@ -86,16 +84,6 @@ public class Datadix2 {
             }
         }
         System.out.println("\nGracias por usar DATADIX STUDIO. ¡Hasta luego! (^^)");
-    }
-
-    static void datos_iniciales(String c[], String t[], String f[], String h[], double ant[]) {
-        for(int x = 0; x < c.length; x++) {
-            c[x] = "Cliente_Demo" + (x + 1);
-            t[x] = "Individual";
-            f[x] = "2026-11-20";
-            h[x] = "16:00";
-            ant[x] = 300.0;
-        }
     }
 
     static int menu_inicial() {
@@ -197,23 +185,28 @@ public class Datadix2 {
         contador_de_registros++;
         System.out.println("\n¡Sesión registrada correctamente!");
 
-        // Generación del Ticket al terminar el registro
+        // Generación del Ticket
         System.out.println("\n=================================");
-        System.out.println("       TICKET DE COMPROBANTE     ");
+        System.out.println(" TICKET DE COMPROBANTE ");
         System.out.println("=================================");
         System.out.println("No. de Sesión : " + capacidad);
-        System.out.println("Cliente       : " + nuevo_cliente);
-        System.out.println("Tipo          : " + nuevo_tipo);
-        System.out.println("Fecha         : " + nueva_fecha);
-        System.out.println("Hora          : " + nueva_hora);
-        System.out.println("Costo total   : $900.0");
-        System.out.println("Anticipo      : $" + nuevo_anticipo);
-        System.out.println("Restante      : $" + (900.0 - nuevo_anticipo));
+        System.out.println("Cliente : " + nuevo_cliente);
+        System.out.println("Tipo : " + nuevo_tipo);
+        System.out.println("Fecha : " + nueva_fecha);
+        System.out.println("Hora : " + nueva_hora);
+        System.out.println("Costo total : $900.0");
+        System.out.println("Anticipo : $" + nuevo_anticipo);
+        System.out.println("Restante : $" + (900.0 - nuevo_anticipo));
         System.out.println("=================================");
         System.out.println("¡Gracias por confiar en Datadix!");
     }
 
     static void mostrarSesiones() {
+        if (capacidad == 0) {
+            System.out.println("\nNo hay sesiones registradas.");
+            return;
+        }
+
         System.out.println("\n====== SESIONES REGISTRADAS ======");
         int totalActual = (contador_de_registros == 0) ? clientes.length : capacidad;
 
@@ -226,9 +219,9 @@ public class Datadix2 {
 
             System.out.println("\nSesión #" + (y + 1));
             System.out.println("Cliente : " + c);
-            System.out.println("Tipo    : " + t);
-            System.out.println("Fecha   : " + f);
-            System.out.println("Hora    : " + h);
+            System.out.println("Tipo : " + t);
+            System.out.println("Fecha : " + f);
+            System.out.println("Hora : " + h);
             System.out.println("Anticipo: $" + ant);
             System.out.println("Restante: $" + (900.0 - ant));
         }
@@ -236,6 +229,11 @@ public class Datadix2 {
 
     static void buscarCliente() {
         Scanner recibir = new Scanner(System.in);
+        if (capacidad == 0) {
+            System.out.println("\nNo hay registros para buscar.");
+            return;
+        }
+
         System.out.print("\nIngrese el nombre del cliente que desea buscar: >");
         String dato_a_buscar = recibir.nextLine();
         int contador_repeticion = 0;
@@ -262,6 +260,11 @@ public class Datadix2 {
 
     static void eliminarSesion() {
         Scanner recibir = new Scanner(System.in);
+        if (capacidad == 0) {
+            System.out.println("\nNo hay sesiones para eliminar.");
+            return;
+        }
+
         int totalActual = (contador_de_registros == 0) ? clientes.length : capacidad;
 
         mostrarSesiones();
@@ -325,3 +328,4 @@ public class Datadix2 {
         System.out.println("\n¡Sesión eliminada correctamente!");
     }
 }
+
