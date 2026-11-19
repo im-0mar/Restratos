@@ -1,0 +1,444 @@
+
+package datadix3;
+
+import java.util.Scanner;
+
+public class Datadix3 {
+
+    static Scanner recibir = new Scanner(System.in);
+
+    static String clientes[] = new String[0];
+    static String tipos[] = new String[0];
+    static String fechas[] = new String[0];
+    static String horas[] = new String[0];
+    static double anticipos[] = new double[0];
+
+    // Arreglo para identificar cada sesión
+    static int identificadores[] = new int[0];
+
+    static int capacidad = 0;
+    static int contador_de_registros = 0;
+
+    // Generador de identificadores únicos
+    static int siguiente_id = 1;
+
+    public static void main(String[] args) {
+
+        System.out.println("=================================");
+        System.out.println("         DATADIX STUDIO          ");
+        System.out.println("=================================");
+
+        int respuesta_inicial = menu_inicial();
+
+        while (respuesta_inicial != 0) {
+
+            switch (respuesta_inicial) {
+
+                case 1:
+                    mostrarInformacion();
+                    break;
+
+                case 2:
+                    mostrarTipos();
+                    break;
+
+                case 3:
+                    registrarSesion();
+                    break;
+
+                case 4:
+                    mostrarSesiones();
+                    break;
+
+                case 5:
+                    buscarCliente();
+                    break;
+
+                case 6:
+                    eliminarSesion();
+                    break;
+            }
+
+            System.out.println("\n¿Desea realizar otra acción?");
+            System.out.println("1 - Sí");
+            System.out.println("0 - No (Salir)");
+            System.out.print("> ");
+
+            int repetir = recibir.nextInt();
+            recibir.nextLine();
+
+            while (repetir != 1 && repetir != 0) {
+
+                System.out.print("Ingrese una opción válida: > ");
+                repetir = recibir.nextInt();
+                recibir.nextLine();
+            }
+
+            if (repetir == 1) {
+                respuesta_inicial = menu_inicial();
+            } else {
+                respuesta_inicial = 0;
+            }
+        }
+
+        System.out.println("\nGracias por usar DATADIX STUDIO. ¡Hasta luego! (^^)");
+    }
+
+    // MENÚ PRINCIPAL
+    static int menu_inicial() {
+
+        int respuesta;
+
+        System.out.println("\nSeleccione la opción que desee realizar:");
+        System.out.println("1 - ¿Qué son los retratos?");
+        System.out.println("2 - Tipos de retrato");
+        System.out.println("3 - Agendar sesión nueva");
+        System.out.println("4 - Ver sesiones registradas (ordenadas)");
+        System.out.println("5 - Buscar sesión por ID");
+        System.out.println("6 - Eliminar sesión por ID");
+        System.out.println("0 - Salir");
+        System.out.print("> ");
+
+        respuesta = recibir.nextInt();
+        recibir.nextLine();
+
+        while (respuesta < 0 || respuesta > 6) {
+
+            System.out.print("Ingrese una opción válida: > ");
+            respuesta = recibir.nextInt();
+            recibir.nextLine();
+        }
+
+        return respuesta;
+    }
+
+    // INFORMACIÓN
+    static void mostrarInformacion() {
+
+        System.out.println("\n¿QUÉ SON LOS RETRATOS?");
+
+        System.out.println("Los retratos son fotografías que capturan momentos importantes de personas, familias, parejas o mascotas.");
+    }
+
+    // TIPOS DE RETRATO
+    static void mostrarTipos() {
+
+        System.out.println("\nTIPOS DE RETRATO");
+
+        System.out.println("1. Individual");
+        System.out.println("2. Familiar");
+        System.out.println("3. Embarazo");
+        System.out.println("4. Bebés");
+        System.out.println("5. Parejas");
+        System.out.println("6. Mascotas");
+
+        System.out.println("\nCosto por sesión: $900");
+    }
+
+    // REGISTRAR SESIÓN
+    static void registrarSesion() {
+
+        System.out.println("\n====== REGISTRO DE NUEVA SESIÓN ======");
+
+        System.out.print("Nombre del cliente: ");
+        String nuevo_cliente = recibir.nextLine();
+
+        while (nuevo_cliente.trim().isEmpty()) {
+
+            System.out.print("El nombre no puede estar vacío. Intente nuevamente: ");
+            nuevo_cliente = recibir.nextLine();
+        }
+
+        System.out.print("Tipo de retrato: ");
+        String nuevo_tipo = recibir.nextLine();
+
+        System.out.print("Fecha de la sesión (AAAA-MM-DD): ");
+        String nueva_fecha = recibir.nextLine();
+
+        System.out.print("Hora de la sesión (HH:MM): ");
+        String nueva_hora = recibir.nextLine();
+
+        System.out.print("Anticipo: $");
+        double nuevo_anticipo = recibir.nextDouble();
+        recibir.nextLine();
+
+        while (nuevo_anticipo < 0 || nuevo_anticipo > 900) {
+
+            System.out.print("El anticipo debe estar entre $0 y $900: $");
+            nuevo_anticipo = recibir.nextDouble();
+            recibir.nextLine();
+        }
+
+        // Aumentar capacidad
+        capacidad++;
+
+        // Crear arreglos auxiliares
+        String[] auxiliar_clientes = new String[capacidad];
+        String[] auxiliar_tipos = new String[capacidad];
+        String[] auxiliar_fechas = new String[capacidad];
+        String[] auxiliar_horas = new String[capacidad];
+
+        double[] auxiliar_anticipos = new double[capacidad];
+
+        int[] auxiliar_identificadores = new int[capacidad];
+
+        // Copiar registros anteriores
+        for (int i = 0; i < contador_de_registros; i++) {
+
+            auxiliar_clientes[i] = clientes[i];
+            auxiliar_tipos[i] = tipos[i];
+            auxiliar_fechas[i] = fechas[i];
+            auxiliar_horas[i] = horas[i];
+            auxiliar_anticipos[i] = anticipos[i];
+
+            auxiliar_identificadores[i] = identificadores[i];
+        }
+
+        // Guardar nueva sesión
+        auxiliar_clientes[contador_de_registros] = nuevo_cliente;
+        auxiliar_tipos[contador_de_registros] = nuevo_tipo;
+        auxiliar_fechas[contador_de_registros] = nueva_fecha;
+        auxiliar_horas[contador_de_registros] = nueva_hora;
+        auxiliar_anticipos[contador_de_registros] = nuevo_anticipo;
+
+        // Asignar identificador único
+        auxiliar_identificadores[contador_de_registros] = siguiente_id;
+
+        siguiente_id++;
+
+        // Actualizar arreglos principales
+        clientes = auxiliar_clientes;
+        tipos = auxiliar_tipos;
+        fechas = auxiliar_fechas;
+        horas = auxiliar_horas;
+        anticipos = auxiliar_anticipos;
+
+        identificadores = auxiliar_identificadores;
+
+        contador_de_registros++;
+
+        ordenarBurbuja();
+
+        // Ticket de comprobante
+        System.out.println("\n¡Sesión registrada correctamente!");
+
+        System.out.println("\n=================================");
+        System.out.println("      TICKET DE COMPROBANTE      ");
+        System.out.println("=================================");
+
+        System.out.println("ID            : " + (siguiente_id - 1));
+        System.out.println("Cliente       : " + nuevo_cliente);
+        System.out.println("Tipo          : " + nuevo_tipo);
+        System.out.println("Fecha         : " + nueva_fecha);
+        System.out.println("Hora          : " + nueva_hora);
+        System.out.println("Costo total   : $900.0");
+        System.out.println("Anticipo      : $" + nuevo_anticipo);
+        System.out.println("Restante      : $" + (900.0 - nuevo_anticipo));
+
+        System.out.println("=================================");
+        System.out.println("¡Gracias por confiar en Datadix!");
+    }
+
+    // ORDENAMIENTO BURBUJA
+    static void ordenarBurbuja() {
+
+        for (int i = 0; i < contador_de_registros - 1; i++) {
+
+            for (int j = 0; j < contador_de_registros - 1 - i; j++) {
+
+                String fechaHoraActual = fechas[j] + " " + horas[j];
+
+                String fechaHoraSiguiente = fechas[j + 1] + " " + horas[j + 1];
+
+                if (fechaHoraActual.compareTo(fechaHoraSiguiente) > 0) {
+
+                    String tempCliente = clientes[j];
+                    clientes[j] = clientes[j + 1];
+                    clientes[j + 1] = tempCliente;
+
+                    String tempTipo = tipos[j];
+                    tipos[j] = tipos[j + 1];
+                    tipos[j + 1] = tempTipo;
+
+                    String tempFecha = fechas[j];
+                    fechas[j] = fechas[j + 1];
+                    fechas[j + 1] = tempFecha;
+
+                    String tempHora = horas[j];
+                    horas[j] = horas[j + 1];
+                    horas[j + 1] = tempHora;
+
+                    double tempAnticipo = anticipos[j];
+                    anticipos[j] = anticipos[j + 1];
+                    anticipos[j + 1] = tempAnticipo;
+
+                    // Intercambiar identificadores
+                    int tempID = identificadores[j];
+                    identificadores[j] = identificadores[j + 1];
+                    identificadores[j + 1] = tempID;
+                }
+            }
+        }
+    }
+
+    // MOSTRAR SESIONES
+    static void mostrarSesiones() {
+
+        if (contador_de_registros == 0) {
+
+            System.out.println("\nNo hay sesiones registradas.");
+            return;
+        }
+
+        ordenarBurbuja();
+
+        System.out.println("\n====== SESIONES REGISTRADAS (POR FECHA) ======");
+
+        for (int i = 0; i < contador_de_registros; i++) {
+
+            System.out.println("\nSesión #" + (i + 1));
+
+            System.out.println("  ID       : " + identificadores[i]);
+            System.out.println("  Cliente  : " + clientes[i]);
+            System.out.println("  Tipo     : " + tipos[i]);
+            System.out.println("  Fecha    : " + fechas[i]);
+            System.out.println("  Hora     : " + horas[i]);
+            System.out.println("  Anticipo : $" + anticipos[i]);
+            System.out.println("  Restante : $" + (900.0 - anticipos[i]));
+
+            System.out.println("------------------------------------------");
+        }
+    }
+
+    // BUSCAR SESIÓN POR ID
+    static void buscarCliente() {
+
+        if (contador_de_registros == 0) {
+
+            System.out.println("\nNo hay sesiones registradas para buscar.");
+            return;
+        }
+
+        System.out.println("\n====== BUSCAR SESIÓN ======");
+
+        System.out.print("Ingrese el ID de la sesión: ");
+
+        int id_buscado = recibir.nextInt();
+        recibir.nextLine();
+
+        boolean encontrado = false;
+
+        for (int i = 0; i < contador_de_registros; i++) {
+
+            if (identificadores[i] == id_buscado) {
+
+                System.out.println("\n--- SESIÓN ENCONTRADA ---");
+
+                System.out.println("ID       : " + identificadores[i]);
+                System.out.println("Cliente  : " + clientes[i]);
+                System.out.println("Tipo     : " + tipos[i]);
+                System.out.println("Fecha    : " + fechas[i]);
+                System.out.println("Hora     : " + horas[i]);
+                System.out.println("Anticipo : $" + anticipos[i]);
+                System.out.println("Restante : $" + (900.0 - anticipos[i]));
+
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+
+            System.out.println("\nNo se encontró ninguna sesión con ese ID.");
+        }
+    }
+
+    // ELIMINAR SESIÓN POR ID
+    static void eliminarSesion() {
+
+        if (contador_de_registros == 0) {
+
+            System.out.println("\nNo hay sesiones registradas para eliminar.");
+            return;
+        }
+
+        System.out.println("\n====== ELIMINAR SESIÓN ======");
+
+        mostrarSesiones();
+
+        System.out.print("\nIngrese el ID de la sesión que desea eliminar: ");
+
+        int id_eliminar = recibir.nextInt();
+        recibir.nextLine();
+
+        int posicion = -1;
+
+        // Buscar posición del identificador
+        for (int i = 0; i < contador_de_registros; i++) {
+
+            if (identificadores[i] == id_eliminar) {
+
+                posicion = i;
+                break;
+            }
+        }
+
+        if (posicion == -1) {
+
+            System.out.println("\nNo existe ninguna sesión con ese ID.");
+            return;
+        }
+
+        String nombre_eliminado = clientes[posicion];
+
+        // Desplazar registros
+        for (int i = posicion; i < contador_de_registros - 1; i++) {
+
+            clientes[i] = clientes[i + 1];
+            tipos[i] = tipos[i + 1];
+            fechas[i] = fechas[i + 1];
+            horas[i] = horas[i + 1];
+            anticipos[i] = anticipos[i + 1];
+
+            identificadores[i] = identificadores[i + 1];
+        }
+
+        contador_de_registros--;
+        capacidad--;
+
+        // Crear arreglos con nueva capacidad
+        String[] auxiliar_clientes = new String[capacidad];
+        String[] auxiliar_tipos = new String[capacidad];
+        String[] auxiliar_fechas = new String[capacidad];
+        String[] auxiliar_horas = new String[capacidad];
+
+        double[] auxiliar_anticipos = new double[capacidad];
+
+        int[] auxiliar_identificadores = new int[capacidad];
+
+        // Copiar registros restantes
+        for (int i = 0; i < contador_de_registros; i++) {
+
+            auxiliar_clientes[i] = clientes[i];
+            auxiliar_tipos[i] = tipos[i];
+            auxiliar_fechas[i] = fechas[i];
+            auxiliar_horas[i] = horas[i];
+            auxiliar_anticipos[i] = anticipos[i];
+
+            auxiliar_identificadores[i] = identificadores[i];
+        }
+
+        // Actualizar arreglos principales
+        clientes = auxiliar_clientes;
+        tipos = auxiliar_tipos;
+        fechas = auxiliar_fechas;
+        horas = auxiliar_horas;
+        anticipos = auxiliar_anticipos;
+
+        identificadores = auxiliar_identificadores;
+
+        System.out.println("\n¡Sesión eliminada correctamente!");
+        System.out.println("Cliente eliminado: " + nombre_eliminado);
+        System.out.println("ID eliminado: " + id_eliminar);
+    }
+}
